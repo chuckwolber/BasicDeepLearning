@@ -43,6 +43,16 @@ public class Network
      * In order to test this code, I utilized the weights, biases, and inputs
      * found in Matt Mazur's backpropagation example found here:
      * https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/
+     * 
+     * Expected values:
+     * Iteration 1:
+     *  Weights: [0.15, 0.25, 0.2, 0.3, 0.4, 0.5, 0.45, 0.55]
+     *  Output: [0.7513650695523157, 0.7729284653214625]
+     * 
+     * Iteration 2:
+     *  Weights: [0.1497807161327628, 0.24975114363236958, 0.19956143226552567, 0.29950228726473915, 
+     *            0.35891647971788465, 0.5113012702387375, 0.4086661860762334, 0.5613701211079891]
+     *  Output: [0.7420881111907824, 0.7752849682944595]
      */
     public static void mazur() {
                 SigmoidFunction sf = new SigmoidFunction();
