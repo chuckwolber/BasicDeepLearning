@@ -22,10 +22,10 @@
 
 package bdl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import bdl.activationFunctions.ActivationFunction;
 import bdl.activationFunctions.SigmoidFunction;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -70,7 +70,8 @@ public class Network
         int i = 0;
         while (true) {
             nw.forwardPropagate();
-            System.out.println(++i + " Output: " + nw.output());
+            System.out.println(++i + " Output: " + nw.output() + " Error: " + nw.currentError(expected));
+            //System.out.println(i + " Weights: " + nw.weights());
             nw.calculateErrorRate(expected);
             nw.backwardPropagate();
             nw.updateWeights();
@@ -119,6 +120,10 @@ public class Network
         _layers.forEach((layer) -> {
             layer.forwardPropagate();
         });
+    }
+    
+    public double currentError(ArrayList<Double> expectedValues) {
+        return outputLayer().currentError(expectedValues);
     }
     
     public void calculateErrorRate(ArrayList<Double> expectedValues) {

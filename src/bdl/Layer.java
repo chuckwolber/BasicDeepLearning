@@ -84,6 +84,15 @@ public class Layer
         });
     }
     
+    double currentError(ArrayList<Double> expectedValues) {
+        if (expectedValues.size() != _nodes.size())
+            return -1.0;
+        double currentError = 0.0;
+        for (int i=0; i<_nodes.size(); i++)
+            currentError += _nodes.get(i).currentError(expectedValues.get(i));
+        return 0.5*currentError;
+    }
+    
     void calculateErrorRate(ArrayList<Double> expectedValues) {
         if (expectedValues.size() != _nodes.size())
             return;

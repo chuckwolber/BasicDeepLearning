@@ -111,6 +111,10 @@ public class Node
         _y = _function.evalFunction(_x);
     }
     
+    double currentError(double expectedValue) {
+        return (_y - expectedValue)*(_y - expectedValue);
+    }
+    
     void calculateErrorRate(double expectedValue) {
         _dEdy = _y - expectedValue;
     }
