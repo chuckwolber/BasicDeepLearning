@@ -22,7 +22,6 @@
 
 package bdl;
 
-import bdl.activationFunctions.ActivationFunction;
 import bdl.activationFunctions.SigmoidFunction;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +32,7 @@ import java.util.Arrays;
  */
 public class Network
 {
+    private final NetworkDescriptor _descriptor;
     private final ArrayList<Layer> _layers = new ArrayList<>();
     
     public static void main(String[] args) {
@@ -55,18 +55,21 @@ public class Network
      *  Output: [0.7420881111907824, 0.7752849682944595]
      */
     public static void mazur() {
-                SigmoidFunction sf = new SigmoidFunction();
-        ArrayList<Double> inputs = new ArrayList<>(Arrays.asList(
-                0.05, 0.10));
-        ArrayList<Double> weights = new ArrayList<>(Arrays.asList(
-                0.15, 0.25, 0.20, 0.30, 0.40, 0.50, 0.45, 0.55));
-        ArrayList<Double> biases = new ArrayList<>(Arrays.asList(
-                0.35, 0.35, 0.60, 0.60));
+        NetworkDescriptor nd = new NetworkDescriptor();
+        nd.setLayers(3);
+        nd.setNodesPerLayer(2);
+        nd.setOutputNodes(2);
+        nd.setLearningRate(0.5);
+        nd.setBiases(new ArrayList<>(Arrays.asList(0.35, 0.35, 0.60, 0.60)));
+        nd.setInitialWeights(new ArrayList<>(Arrays.asList(0.15, 0.25, 0.20, 0.30, 0.40, 0.50, 0.45, 0.55)));
+        nd.setActivationFunction(new SigmoidFunction());
+        
+        ArrayList<Double> inputs = new ArrayList<>(Arrays.asList(0.05, 0.10));
         ArrayList<Double> expected = new ArrayList<>(Arrays.asList(0.01, 0.99));
-        Network nw = new Network(3, 2, sf, 0.5);
+        
+        Network nw = new Network(nd);
         nw.setInput(inputs);
-        nw.setWeights(weights);
-        nw.setBiases(biases);
+        
         int i = 0;
         while (true) {
             nw.forwardPropagate();
@@ -78,9 +81,15 @@ public class Network
         }
     }
     
-    public Network(int layers, int nodesPerLayer, ActivationFunction func, double learningRate) {
-        for (int i=0; i<layers; i++)
-            addLayer(new Layer(nodesPerLayer, func, learningRate));
+    public Network(NetworkDescriptor descriptor) {
+        _descriptor = descriptor;
+        for (int i=0; i<_descriptor.layers()-1; i++)
+            addLayer(new Layer(_descriptor.nodesPerLayer(), _descriptor.activationFunction(), 
+                    _descriptor.learningRate()));
+        addLayer(new Layer(_descriptor.outputNodes(), _descriptor.activationFunction(), 
+                _descriptor.learningRate()));
+        setWeights(descriptor.initialWeights());
+        setBiases(descriptor.biases());
     }
     
     public ArrayList<Double> weights() {
@@ -89,19 +98,6 @@ public class Network
             weights.addAll(layer.weights());
         });
         return weights;
-    }
-    
-    public void setWeights(ArrayList<Double> weights) {
-        _layers.forEach((layer) -> {
-            layer.setWeights(weights);
-        });
-    }
-    
-    public void setBiases(ArrayList<Double> biases) {
-        _layers.forEach((layer) -> {
-            if (layer != inputLayer())
-                layer.setBiases(biases);
-        });
     }
     
     public void setInput(ArrayList<Double> inputValues) {
@@ -138,6 +134,23 @@ public class Network
     public void updateWeights() {
         _layers.forEach((layer) -> {
             layer.updateWeights();
+        });
+    }
+    
+    private void setWeights(ArrayList<Double> weights) {
+        if (weights == null || weights.isEmpty())
+            return;
+        _layers.forEach((layer) -> {
+            layer.setWeights(weights);
+        });
+    }
+    
+    private void setBiases(ArrayList<Double> biases) {
+        if (biases == null || biases.isEmpty())
+            return;
+        _layers.forEach((layer) -> {
+            if (layer != inputLayer())
+                layer.setBiases(biases);
         });
     }
     
