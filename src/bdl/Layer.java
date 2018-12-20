@@ -63,11 +63,11 @@ public class Layer
         });
     }
     
-    void setInput(ArrayList<Double> inputValues) {
-        if (inputValues.size() != _nodes.size())
+    void setInput(double[] inputValues) {
+        if (inputValues.length != _nodes.size())
             return;
         for (int i=0; i<_nodes.size(); i++)
-            _nodes.get(i).sensorInput(inputValues.get(i));
+            _nodes.get(i).sensorInput(inputValues[i]);
     }
     
     ArrayList<Double> output() {
@@ -84,20 +84,20 @@ public class Layer
         });
     }
     
-    double currentError(ArrayList<Double> expectedValues) {
-        if (expectedValues.size() != _nodes.size())
+    double currentError(double[] expectedValues) {
+        if (expectedValues.length != _nodes.size())
             return -1.0;
         double currentError = 0.0;
         for (int i=0; i<_nodes.size(); i++)
-            currentError += _nodes.get(i).currentError(expectedValues.get(i));
+            currentError += _nodes.get(i).currentError(expectedValues[i]);
         return 0.5*currentError;
     }
     
-    void calculateErrorRate(ArrayList<Double> expectedValues) {
-        if (expectedValues.size() != _nodes.size())
+    void calculateErrorRate(double[] expectedValues) {
+        if (expectedValues.length != _nodes.size())
             return;
         for (int i=0; i<_nodes.size(); i++)
-            _nodes.get(i).calculateErrorRate(expectedValues.get(i));
+            _nodes.get(i).calculateErrorRate(expectedValues[i]);
     }
     
     void backwardPropagate() {

@@ -35,12 +35,23 @@ public class Weight
     private final Double _learningRate;
     
     public Weight(double learningRate) {
-        _weight = RandomWeight.INSTANCE.nextDouble();
         _learningRate = learningRate;
     }
     
     public Node parentNode() {
         return _parentNode;
+    }
+    
+    /**
+     * Weights should be initialized to the inverse square root of the fan-in,
+     * where "fan-in" is defined as the number of weights coming in to a node.
+     * This helps avoid saturation and paralysis.
+     */
+    void initializeWeight() {
+        if (_weight != 0)
+            return;
+        double max =  1.0 / (Math.sqrt(_childNode.fanIn()));
+        _weight = RandomWeight.INSTANCE.nextDouble(-max, max);
     }
     
     public void setParentNode(Node parentNode) {

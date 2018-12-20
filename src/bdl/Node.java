@@ -44,6 +44,14 @@ public class Node
         _y = input;
     }
     
+    int fanIn() {
+        return _parents.size();
+    }
+    
+    int fanOut() {
+        return _children.size();
+    }
+    
     double output() {
         return _y;
     }
@@ -74,10 +82,15 @@ public class Node
     }
     
     void setWeights(ArrayList<Double> weights) {
-        _children.forEach((weight) -> {
-            weight.setWeight(weights.get(0));
-            weights.remove(0);
-        });
+        if (weights == null || weights.isEmpty())
+            _children.forEach((weight) -> {
+                weight.initializeWeight();
+            });
+        else
+            _children.forEach((weight) -> {
+                weight.setWeight(weights.get(0));
+                weights.remove(0);
+            });
     }
     
     void linkToParent(Node parentNode) {

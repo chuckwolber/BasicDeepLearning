@@ -35,10 +35,14 @@ public enum RandomWeight
     
     private Random _random;
     
-    public double nextDouble() {
+    public double nextDouble(double origin, double bound) {
         if (_random == null)
             initRandom();
-        return _random.nextDouble();
+        double r = _random.nextDouble();
+        r = r * (bound - origin) + origin;
+        if (r >= bound)
+            r = Math.nextDown(bound);
+        return r;
     }
     
     private void initRandom() {
